@@ -52,10 +52,7 @@ namespace WpfLibrary1.Controls
 
         protected override Visual GetVisualChild(int index)
         {
-            if (index != 0)
-            {
-                throw new ArgumentOutOfRangeException("index");
-            }
+            ArgumentOutOfRangeException.ThrowIfNotEqual(index, 0);
             return _contentControl;
         }
 

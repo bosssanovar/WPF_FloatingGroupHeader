@@ -20,7 +20,7 @@ namespace WpfLibrary1.Behaviors
     /// </summary>
     public class GroupHeaderFrozenBehavior : Behavior<ItemsControl>
     {
-        private static readonly Dictionary<GroupItem, WeakReference<HeaderAdorner>> _CurrentGroupItem = new Dictionary<GroupItem, WeakReference<HeaderAdorner>>();
+        private static readonly Dictionary<GroupItem, WeakReference<HeaderAdorner>> _CurrentGroupItem = [];
 
         #region HeaderTemplate依存関係プロパティ
         public DataTemplate HeaderTemplate
@@ -63,7 +63,7 @@ namespace WpfLibrary1.Behaviors
 
         private void SetScrollChangedEvent(bool add)
         {
-            ScrollViewer scrollViewer;
+            ScrollViewer? scrollViewer;
 
             if (AssociatedObject is ListBox)
             {
@@ -100,8 +100,7 @@ namespace WpfLibrary1.Behaviors
             foreach (var containerItem in AssociatedObject.ItemContainerGenerator.Items)
             {
                 // GroupItemコントロールを取得
-                var groupItemContainer = AssociatedObject.ItemContainerGenerator.ContainerFromItem(containerItem) as GroupItem;
-                if (groupItemContainer == null)
+                if (AssociatedObject.ItemContainerGenerator.ContainerFromItem(containerItem) is not GroupItem groupItemContainer)
                 {
                     Debug.WriteLine("Failed: get groupItemContainer");
                     return;
@@ -169,12 +168,11 @@ namespace WpfLibrary1.Behaviors
         }
 
 
-        private HeaderAdorner GetAdorner(GroupItem container)
+        private static HeaderAdorner? GetAdorner(GroupItem container)
         {
-            if (_CurrentGroupItem.ContainsKey(container))
+            if (_CurrentGroupItem.TryGetValue(container, out WeakReference<HeaderAdorner>? value))
             {
-                HeaderAdorner adorner;
-                if (_CurrentGroupItem[container].TryGetTarget(out adorner))
+                if (value.TryGetTarget(out HeaderAdorner? adorner))
                 {
                     return adorner;
                 }

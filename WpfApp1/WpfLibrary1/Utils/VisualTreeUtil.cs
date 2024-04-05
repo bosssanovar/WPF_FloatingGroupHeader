@@ -11,18 +11,18 @@ namespace WpfLibrary1.Utils
 {
     public static class VisualTreeUtil
     {
-        public static T FindParent<T>(this FrameworkElement child) where T : DependencyObject
+        public static T? FindParent<T>(this FrameworkElement child) where T : DependencyObject
         {
-            T parent = null;
+            T? parent = null;
             var currentParent = VisualTreeHelper.GetParent(child);
 
             while (currentParent != null)
             {
 
                 // check the current parent
-                if (currentParent is T)
+                if (currentParent is T t)
                 {
-                    parent = (T)currentParent;
+                    parent = t;
                     break;
                 }
 
@@ -39,9 +39,9 @@ namespace WpfLibrary1.Utils
         /// <typeparam name="T"></typeparam>
         /// <param name="parent"></param>
         /// <returns></returns>
-        public static T FindChild<T>(this FrameworkElement parent) where T : DependencyObject
+        public static T? FindChild<T>(this FrameworkElement parent) where T : DependencyObject
         {
-            T child = null;
+            T? child = null;
 
             var count = VisualTreeHelper.GetChildrenCount(parent);
             if (count == 0)
@@ -53,9 +53,9 @@ namespace WpfLibrary1.Utils
             for (var i = 0; i < count; i++)
             {
                 var currentChild = VisualTreeHelper.GetChild(parent, i);
-                if (currentChild is T)
+                if (currentChild is T t)
                 {
-                    child = (T)currentChild;
+                    child = t;
                     break;
                 }
 
@@ -85,9 +85,9 @@ namespace WpfLibrary1.Utils
             PrintObject(level, obj);
             foreach (var child in GetVisualChildren(obj))
             {
-                if (child is DependencyObject)
+                if (child is DependencyObject depOjb)
                 {
-                    PrintVisualTreeCore(level + 1, (DependencyObject)child);
+                    PrintVisualTreeCore(level + 1, depOjb);
                 }
                 else
                 {
