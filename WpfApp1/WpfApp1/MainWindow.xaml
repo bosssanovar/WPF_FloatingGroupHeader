@@ -3,10 +3,60 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:WpfApp1"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:b="clr-namespace:WpfLibrary1.Behaviors;assembly=WpfLibrary1"
         mc:Ignorable="d"
+        DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
         Title="MainWindow" Height="300" Width="400">
+
+    <Window.Resources>
+        <CollectionViewSource x:Key="StaffCollectionKey"
+                              Source="{Binding Items}">
+            <CollectionViewSource.GroupDescriptions>
+                <PropertyGroupDescription PropertyName="GroupName" />
+            </CollectionViewSource.GroupDescriptions>
+        </CollectionViewSource>
+
+        <DataTemplate x:Key="GroupItemHeaderTemplateKey">
+            <Border Padding="4 2"
+                    Background="LightSkyBlue">
+                <TextBlock Text="{Binding Name}"
+                           Foreground="Snow"/>
+            </Border>
+
+        </DataTemplate>
+    </Window.Resources>
+    
     <Grid>
+        <ScrollViewer>
+            <ItemsControl ItemsSource="{Binding Source={StaticResource StaffCollectionKey}}"
+                          d:ItemsSource="{d:SampleData ItemCount=30}">
+                <i:Interaction.Behaviors>
+                    <b:GroupHeaderFrozenBehavior HeaderTemplate="{StaticResource GroupItemHeaderTemplateKey}" />
+                </i:Interaction.Behaviors>
+
+                <ItemsControl.GroupStyle>
+                    <GroupStyle HeaderTemplate="{StaticResource GroupItemHeaderTemplateKey}">
+                    </GroupStyle>
+                </ItemsControl.GroupStyle>
+
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Margin="4 1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="60" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Text="{Binding Identifier}" />
+
+                            <TextBlock Grid.Column="1"
+                                       Text="{Binding Name}" />
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
 
     </Grid>
 </Window>
